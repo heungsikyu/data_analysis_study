@@ -1,0 +1,26 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1603987149699.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2666540005",
+    "id" : "9C1CAA34",
+    "lastKnownWriteTime" : 1604051797,
+    "last_content_update" : 1604051797623,
+    "path" : "~/Library/Mobile Documents/com~apple~CloudDocs/data_analysis/Bayesian_probability/math/math.R",
+    "project_path" : null,
+    "properties" : {
+        "cursorPosition" : "34,0",
+        "scrollLine" : "19",
+        "tempName" : "Untitled1"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
