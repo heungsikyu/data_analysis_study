@@ -138,10 +138,10 @@ class App(Frame):
         self.stock_btn_frame = Frame(self.left_frame, padx=5, pady=5, relief='sunken', bd=0)
         self.stock_btn_frame.grid(row=0, column=0, sticky='new')
 
-        self.btn_add_file = Button(self.stock_btn_frame, padx=5, pady=5, width=12,  text="KOSPI", command=self.ReadStockDataToViewTreeView)
+        self.btn_add_file = Button(self.stock_btn_frame, padx=5, pady=5, width=12,  text="KOSPI", command=lambda:self.ReadStockDataToViewTreeView('KOSPI'))
         self.btn_add_file.pack(side="left", padx=5, pady=5)
 
-        self.btn_del_file = Button(self.stock_btn_frame, padx=5, pady=5, width=12, text="KOSDAQ")
+        self.btn_del_file = Button(self.stock_btn_frame, padx=5, pady=5, width=12, text="KOSDAQ", command=lambda:self.ReadStockDataToViewTreeView('KOSDAQ'))
         self.btn_del_file.pack(side="left", padx=5, pady=5)
 
         self.btn_update_file = Button(self.stock_btn_frame,  pady=5, width=12, text="종목업데이트", command=self.UpdateStockCode)
@@ -156,47 +156,30 @@ class App(Frame):
 
         # self.list_file = Listbox(self.list_frame, selectmode="extended",height=5, bd=0, relief=SUNKEN,  yscrollcommand=self.scrollbar.set)
         # self.list_file.pack(side='left',ipadx=5, padx=5, pady=5,  fill='both', expand=True)
-        # self.tree_view = Treeview(self.list_frame,  bd=0, relief=SUNKEN,  yscrollcommand=self.scrollbar.set)
+        # self.stockTreeview = Treeview(self.list_frame,  bd=0, relief=SUNKEN,  yscrollcommand=self.scrollbar.set)
 
-        self.tree_view = ttk.Treeview(self.list_frame, style="customstyle.Treeview", height=5, yscrollcommand=self.scrollbar.set)
-        self.tree_view.tag_configure('odd', background='#E8E8E8')
-        self.tree_view.tag_configure('even', background='#ffffff')
-        self.tree_view["columns"]=("id","name","code")
+        self.stockTreeview = ttk.Treeview(self.list_frame, style="customstyle.Treeview", height=5, yscrollcommand=self.scrollbar.set)
+        self.stockTreeview.tag_configure('odd', background='#ffffff')
+        self.stockTreeview.tag_configure('even', background='#E8E8E8')
+        self.stockTreeview["columns"]=("id","name","code")
 
-        self.tree_view.column("#0", width=0,stretch=NO)
-        self.tree_view.column("id", width=50, anchor=CENTER )
-        self.tree_view.column("name", width=230, anchor=CENTER )
-        self.tree_view.column("code", width=230, anchor=CENTER)
+        self.stockTreeview.column("#0", width=0,stretch=NO)
+        self.stockTreeview.column("id", width=50, anchor=CENTER )
+        self.stockTreeview.column("name", width=230, anchor=CENTER )
+        self.stockTreeview.column("code", width=230, anchor=CENTER)
 
-        self.tree_view.heading("#0", text="" )
-        self.tree_view.heading("id", text="ID", anchor=W)
-        self.tree_view.heading("name", text="회사명")
-        self.tree_view.heading("code", text="종목코드")
+        self.stockTreeview.heading("#0", text="" )
+        self.stockTreeview.heading("id", text="ID", anchor=W)
+        self.stockTreeview.heading("name", text="회사명")
+        self.stockTreeview.heading("code", text="종목코드")
 
-        # self.tree_view.insert(parent='', index='end',  iid=0, text="", values=("1","삼성전자","004594"))
-        # self.tree_view.insert(parent='', index='end',  iid=1, text="", values=("2","삼성전자","004594"))
-        # self.tree_view.insert(parent='', index='end',  iid=3, text="", values=("3","한국전자","004594"))
-        # self.tree_view.insert(parent='', index='end',  iid=4, text="", values=("4","엘지전자","004594"))
-        # self.tree_view.insert(parent='', index='end',  iid=5, text="", values=("5","현대자동차","004594"))
-        # self.tree_view.insert(parent='', index='end',  iid=6, text="", values=("6","sk반도체","004594"))
-        # self.tree_view.insert(parent=" ", index='end',  text="Line 1", values=("1A","1b"))
-        # self.tree_view.insert(parent=" ", index='end',  text="Line 1", values=("1B","1b"))
+        self.stockTreeview.pack(side='left', fill='both', expand=True)
 
-        # id2 = self.tree_view.insert("", 1, "dir2", text="Dir 2")
-        # self.tree_view.insert(id2, "end", "dir 2", text="sub dir 2", values=("2A","2B"))
-
-
-        # ##alternatively:
-        # self.tree_view.insert("", 3, "dir3", text="Dir 3")
-        # self.tree_view.insert("dir3", 3, text=" sub dir 3",values=("3A"," 3B"))
-
-        self.tree_view.pack(side='left', fill='both', expand=True)
-
-        self.scrollbar.config(command=self.tree_view.yview)
+        self.scrollbar.config(command=self.stockTreeview.yview)
 
         # 실행 날짜 선택, 기간 선택  
         # global simmul_startdate, simmul_enddate
-        self.simmuloption_frame = LabelFrame(self.left_frame, text="실행 기간 선택", relief=SOLID, bd=1)
+        self.simmuloption_frame = LabelFrame(self.left_frame, text="과거 주식 데이터 기간 선택 ", relief=SOLID, bd=1)
         self.simmuloption_frame.grid(row=2, column=0, sticky='new', padx=5, pady=5)
 
         self.lbl_simmul_start = Label(self.simmuloption_frame, text="시작일", width=4)
@@ -220,7 +203,7 @@ class App(Frame):
         self.btn_end_calendar.pack(side="left", padx=5, pady=5)
 
 
-        #시뮬레이션 옵션
+        #시뮬레이션 옵션 
         self.option_frame = LabelFrame(self.left_frame, text="시뮬레이션 옵션", relief='solid', bd=1)
         self.option_frame.grid(row=3,column=0, sticky='nwe', padx=5, pady=5)
 
@@ -234,6 +217,7 @@ class App(Frame):
         self.textAmplitude = Entry(self.option_frame,width=12)
         self.textAmplitude.pack(side="left", padx=5, pady=5)
 
+
         # 진폭 amplitude
         self.textAmplitude.insert(0, "0.5")
         self.A = 0.5
@@ -242,19 +226,20 @@ class App(Frame):
         self.v = 2.0
 
         # 실행버튼 프레임
-        self.btn_frame = LabelFrame(self.left_frame, text="실행 버튼 프레임", relief='solid', bd=1)
+        self.btn_frame = Frame(self.left_frame, relief='solid', bd=0)
         self.btn_frame.grid(row=4,column=0, sticky='nwe', padx=5, pady=5)
 
-        # self.buttonPlot = Button(self.btn_frame,text="Plot",command=self.drawPlot,width=12, padx=5, pady=5)        
-        # self.buttonPlot.pack(side="right", padx=5, pady=5)
-        self.buttonClear = Button(self.btn_frame,text="옵션리셋",command=self.Clear,width=12, padx=5, pady=5)
+        self.buttonPlot = Button(self.btn_frame,text="Plot",command=self.drawPlot,width=12, padx=5, pady=5)        
+        self.buttonPlot.pack(side="right", padx=5, pady=5)
+
+        self.buttonClear = Button(self.btn_frame,text="옵션초기화",command=self.resetSimmulationOption,width=12, padx=5, pady=5)
         self.buttonClear.pack(side="right", padx=5, pady=5)
-        self.buttonClear.bind(lambda e:self.Clear)
+        self.buttonClear.bind(lambda e:self.resetSimmulationOption)
 
         # self.btn_chart = Button(self.btn_frame, padx=5, pady=5, width=12, text="chartDraw")
         # self.btn_chart.pack(side="right", padx=5, pady=5)
 
-        self.btn_cancel_file = Button(self.btn_frame, padx=5, pady=5, width=12, text="취소", command=self.master.quit)
+        self.btn_cancel_file = Button(self.btn_frame, padx=5, pady=5, width=12, text="예측 취소", command=self.master.quit)
         self.btn_cancel_file.pack(side="right", padx=5, pady=5)
         self.btn_start_file = Button(self.btn_frame, padx=5, pady=5, width=12,  text="예측 시작", command=self.startSimmulation)
         self.btn_start_file.pack(side="right", padx=5, pady=5)
@@ -276,9 +261,12 @@ class App(Frame):
         print("종목코드 업데이트 ")
 
     # KOSPI 종목 가져와서 Treeview에 넣기 
-    def ReadStockDataToViewTreeView(self):
-        
-        with open(self.BASE_DIR+'/KOSPI.csv','r') as f:
+    def ReadStockDataToViewTreeView(self,SotckType):
+        items = self.stockTreeview.get_children()
+        if len(items) > 0 :
+            self.removeAllTreeData()
+            
+        with open(self.BASE_DIR + '/' + SotckType +'.csv','r') as f:
             reader = csv.reader(f)
             count = 0
             for record in reader:
@@ -286,9 +274,10 @@ class App(Frame):
                     pass
                 else:
                     # print(record[])
-                    self.tree_view.insert(parent='', index='end', iid=count, text="", values=(record[0], record[1],record[2]))
+                    self.stockTreeview.insert(parent='', index='end', iid=count, text="", values=(record[0], record[1],record[2]))
                 count += 1
-        self.clearTreeView()
+        # self.removeTreeData()
+
         # dat = pd.read_csv(self.BASE_DIR+'/KOSPI.csv', encoding = 'utf-8') 
         # print(dat.head())
         # print(dat.describe(include="all"))
@@ -300,16 +289,17 @@ class App(Frame):
         #     ["4", "jhon", "aaaaa"],
         #     ["5", "jhon", "aaaaa"],
         # ]
-        # #  self.tree_view.insert(parent='', index='end',  iid=0, text="", values=("1","삼성전자","004594"))
+        # #  self.stockTreeview.insert(parent='', index='end',  iid=0, text="", values=("1","삼성전자","004594"))
         # count = 0 
         # for record in data:
         #     count += 1
-        #     self.tree_view.insert(parent='', index='end', iid=count, text="", values=(record[0], record[1],record[2]))
+        #     self.stockTreeview.insert(parent='', index='end', iid=count, text="", values=(record[0], record[1],record[2]))
         # pass
 
     # Treeview 삭제 
-    def clearTreeView(self):
-        self.tree_view.delete(*tree_view.get_children())
+    def removeAllTreeData(self):
+        for record in self.stockTreeview.get_children():
+            self.stockTreeview.delete(record)
         
 
     def startSimmulation(self,event=None):
@@ -348,7 +338,7 @@ class App(Frame):
         # self.ax.set_xlim([0, 6.3])
         # self.ax.set_ylim([-3, 3])
 
-    def Clear(self):      
+    def resetSimmulationOption(self):      
         self.textAmplitude.delete(0, "end")
         self.textAmplitude.insert(0, "0.5")
         self.textSpeed.delete(0, "end")       
@@ -385,7 +375,7 @@ class App(Frame):
 def main():
     global BASE_DIR 
     root = Tk()
-    root.geometry("1045x440")
+    root.geometry("1200x720")
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
     root. resizable(False, False)
     app = App(BASE_DIR, root)
